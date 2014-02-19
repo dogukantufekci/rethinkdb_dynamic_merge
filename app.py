@@ -83,6 +83,8 @@ def get_accounts():
         pluck = ["id"]
     
 
+    now = datetime.now()
+
     selection = r.table("accounts").map(lambda account: 
         account.merge({
             "conversations": r.table("conversations").filter(lambda conversation: 
@@ -102,12 +104,14 @@ def get_accounts():
 
     # selection = r.table("accounts").pluck(pluck).run(g.db_connection)
 
+    then = datetime.now()
+
     selection = list(selection)
-    return Response(
-            json.dumps(selection, indent=4, cls=_DateEncoder),
-            mimetype='application/json',
-            status=200,
-        )
+    return Response(json.dumps({
+        'data': selection,
+        'query time': then - now,
+    }, 
+    indent=4, cls=_DateEncoder), mimetype='application/json', status=200)
 
 
 if __name__ == "__main__":
