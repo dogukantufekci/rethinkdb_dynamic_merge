@@ -85,28 +85,29 @@ def get_accounts():
 
     now = datetime.now()
 
-    selection = r.table("accounts").map(lambda account: 
-        account.merge({
-            "conversations": r.table("conversations").filter(lambda conversation: 
-                conversation["to"].contains(account["id"])).coerce_to("array").map(lambda conversation:
-                conversation.merge({
-                    "to": conversation["to"].map(lambda account: 
-                        r.table("accounts").get(account)).coerce_to("array"),
-                    "messages": r.table("messages").filter(lambda message:
-                        message["conversation"] == conversation["id"]).coerce_to("array").map(lambda message:
-                        message.merge({
-                            "from": r.table("accounts").get(message["from"]),
-                            "readers": r.table("message_readers").filter(lambda readers:
-                                readers["message"] == message["id"]).coerce_to("array"),
-                        }))
-                }))
-        })).pluck(pluck).run(g.db_connection)
+    # selection = r.table("accounts").map(lambda account: 
+    #     account.merge({
+    #         "conversations": r.table("conversations").filter(lambda conversation: 
+    #             conversation["to"].contains(account["id"])).coerce_to("array").map(lambda conversation:
+    #             conversation.merge({
+    #                 "to": conversation["to"].map(lambda account: 
+    #                     r.table("accounts").get(account)).coerce_to("array"),
+    #                 "messages": r.table("messages").filter(lambda message:
+    #                     message["conversation"] == conversation["id"]).coerce_to("array").map(lambda message:
+    #                     message.merge({
+    #                         "from": r.table("accounts").get(message["from"]),
+    #                         "readers": r.table("message_readers").filter(lambda readers:
+    #                             readers["message"] == message["id"]).coerce_to("array"),
+    #                     }))
+    #             }))
+    #     })).pluck(pluck).run(g.db_connection)
 
-    # selection = r.table("accounts").pluck(pluck).run(g.db_connection)
-
-    then = datetime.now()
+    selection = r.table("accounts").pluck(pluck).run(g.db_connection)
 
     selection = list(selection)
+    
+    then = datetime.now()
+
     return Response(json.dumps({
         'data': selection,
         'query time': then - now,
