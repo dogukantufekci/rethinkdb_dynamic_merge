@@ -3,9 +3,9 @@ rethinkdb_dynamic_merge
 
 Setup:
 
-pip install -r requirements.txt
-rethinkdb
-python app.py --setup
+1. pip install -r requirements.txt
+2. rethinkdb
+3. python app.py --setup
 
 Run:
 
