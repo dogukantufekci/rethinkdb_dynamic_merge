@@ -9,6 +9,7 @@ from flask import Flask, g, jsonify, render_template, request, abort, Response
 import rethinkdb as r
 from rethinkdb.errors import RqlRuntimeError, RqlDriverError
 
+from pluck import validate
 
 class _DateEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -71,22 +72,35 @@ def teardown_request(exception):
 
 @app.route("/accounts", methods=['GET'])
 def get_accounts():
+    pluck = request.args.get('pluck')
+    if pluck is not None:
+        try:
+            pluck = json.loads(pluck)
+            validate(pluck)
+        except Exception, e:
+            raise e
+    else:
+        pluck = ["id"]
+    
+
     selection = r.table("accounts").map(lambda account: 
-    account.merge({
-        "conversations": r.table("conversations").filter(lambda conversation: 
-            conversation["to"].contains(account["id"])).coerce_to("array").map(lambda conversation:
-            conversation.merge({
-                "to": conversation["to"].map(lambda account: 
-                    r.table("accounts").get(account)).coerce_to("array"),
-                "messages": r.table("messages").filter(lambda message:
-                    message["conversation"] == conversation["id"]).coerce_to("array").map(lambda message:
-                    message.merge({
-                        "from": r.table("accounts").get(message["from"]),
-                        "readers": r.table("message_readers").filter(lambda readers:
-                            readers["message"] == message["id"]).coerce_to("array"),
-                    }))
-            }))
-    })).run(g.db_connection)
+        account.merge({
+            "conversations": r.table("conversations").filter(lambda conversation: 
+                conversation["to"].contains(account["id"])).coerce_to("array").map(lambda conversation:
+                conversation.merge({
+                    "to": conversation["to"].map(lambda account: 
+                        r.table("accounts").get(account)).coerce_to("array"),
+                    "messages": r.table("messages").filter(lambda message:
+                        message["conversation"] == conversation["id"]).coerce_to("array").map(lambda message:
+                        message.merge({
+                            "from": r.table("accounts").get(message["from"]),
+                            "readers": r.table("message_readers").filter(lambda readers:
+                                readers["message"] == message["id"]).coerce_to("array"),
+                        }))
+                }))
+        })).pluck(pluck).run(g.db_connection)
+
+    # selection = r.table("accounts").pluck(pluck).run(g.db_connection)
 
     selection = list(selection)
     return Response(

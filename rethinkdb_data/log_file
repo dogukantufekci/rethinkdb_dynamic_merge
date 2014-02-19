@@ -1,0 +1,17 @@
+2014-02-19T11:31:34.235569000 0.404175s info: Creating directory /Users/dogukan/Work/rethinkdb_dynamic_merge/rethinkdb_data
+2014-02-19T11:31:34.239626000 0.408234s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/dogukan/Work/rethinkdb_dynamic_merge/rethinkdb_data' did not already exist.)
+2014-02-19T11:31:34.239747000 0.408354s info: Running rethinkdb 1.11.3 (CLANG 5.0 (clang-500.2.76))...
+2014-02-19T11:31:34.247086000 0.415693s info: Running on Darwin 13.0.0 x86_64
+2014-02-19T11:31:34.247156000 0.415763s info: Loading data from directory /Users/dogukan/Work/rethinkdb_dynamic_merge/rethinkdb_data
+2014-02-19T11:31:34.428321000 0.596928s info: Listening for intracluster connections on port 29015
+2014-02-19T11:31:34.430591000 0.599197s info: Listening for client driver connections on port 28015
+2014-02-19T11:31:34.430609000 0.599216s info: Listening for administrative HTTP connections on port 8080
+2014-02-19T11:31:34.430612000 0.599218s info: Listening on addresses: 127.0.0.1, ::1
+2014-02-19T11:31:34.430612000 0.599219s info: To fully expose RethinkDB on the network, bind to all addresses
+2014-02-19T11:31:34.430613000 0.599220s info: by running rethinkdb with the `--bind all` command line option.
+2014-02-19T11:31:34.430614000 0.599221s info: Server ready
+2014-02-19T11:46:31.171461000 897.291848s info: Server got SIGINT from pid 416, uid 501; shutting down...
+2014-02-19T11:46:31.171925000 897.292311s info: Shutting down client connections...
+2014-02-19T11:46:31.172313000 897.292699s info: All client connections closed.
+2014-02-19T11:46:31.172324000 897.292710s info: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2014-02-19T11:46:31.186933000 897.307319s info: Storage engine shut down.
